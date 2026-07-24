@@ -12,6 +12,8 @@ fi
 
 # directory path of backup data 
 src_dir="${backup_dir}"
+# option setting of target_dir
+OPTION_DIR=("src/" ".local/bin/" "Documents/")
 # directory path of back up devices
 target_dir1="${device_dir1}"
 target_dir2="${device_dir2}"
@@ -62,28 +64,36 @@ start_backup() {
 	case "$mount_result" in
 		# start back up system to both devices
 		"SUCCESS")
+			for sub in "${OPTION_DIR[@]}" ; do
 			# delete old copied data and send only new data. 
-                        rsync -av --delete "$src_dir" "$target_dir1" >> "$log_dir" 2>&1
-                        rsync -av --delete "$src_dir" "$target_dir2" >> "$log_dir" 2>&1
+                        	rsync -av --delete "${src_dir}" "${target_dir1}${sub}" >> "$log_dir" 2>&1
+                        	rsync -av --delete "${src_dir}" "${target_dir2}${sub}" >> "$log_dir" 2>&1
+			done
                         log_message "SUCCESS" "backup process to both devices is successfully finished."
                         exit 0
                         ;;
+
 		# start back up system to device1
 		"WARN1")
-			rsync -av --delete "$src_dir" "$target_dir1" >> "$log_dir" 2>&1
+			for sub in "${OPTION_DIR[@]}" ; do
+				rsync -av --delete "${src_dir}" "${target_dir1}${sub}" >> "$log_dir" 2>&1
+			done
                         log_message "SUCCESS" "backup process to ${target_dir1} is successfully finished."
                         exit 0
                         ;;
 		# start back up system to device2
 		"WARN2")
 			mkdir -p "$target_dir2"
-                        rsync -av --delete "$src_dir" "$target_dir2" >> "$log_dir" 2>&1
+
+                        for sub in "${OPTION_DIR[@]}" ; do
+				rsync -av --delete "${src_dir}" "${target_dir2}${sub}" >> "$log_dir" 2>&1
+			done
                         log_message "SUCCESS" "backup process to ${target_dir2} is successfully finished."
                         exit 0
                         ;;
 		# no device can be sand back updata. then exit this program.
 		"FAILED")
-			exit 1
+			exit 1i
 			;;
 	esac
 }
