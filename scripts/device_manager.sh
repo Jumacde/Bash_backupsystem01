@@ -14,7 +14,8 @@ fi
 # directory path of backup data 
 src_dir="${backup_dir}"
 # option setting of target_dir
-OPTION_DIR="${OP_DIR}"
+#OPTION_DIR="${OP_DIR[@]}"
+OPTION_DIR=(${OPTION_DIR//:/ })
 # directory path of back up devices
 target_dir1="${device_dir1}"
 target_dir2="${device_dir2}"
