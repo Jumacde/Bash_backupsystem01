@@ -5,6 +5,7 @@ ENV_FILE="$(dirname "$0")/.env"
 # check exist of the .env file.
 if [ -f "$ENV_FILE" ]; then
         export $(grep -v '^#' "$ENV_FILE" | xargs)
+	#source "$ENV_FILE"
 else
         echo "ERROR: .env file not found."
         exit 1 # if .env file not found end this script.
@@ -13,7 +14,7 @@ fi
 # directory path of backup data 
 src_dir="${backup_dir}"
 # option setting of target_dir
-OPTION_DIR=("src/" ".local/bin/" "Documents/")
+OPTION_DIR="${OP_DIR}"
 # directory path of back up devices
 target_dir1="${device_dir1}"
 target_dir2="${device_dir2}"
@@ -32,22 +33,22 @@ check_mount() {
 		# if both devices are mounted.
 		"11")	
 			# create back up directory both devices if they exist not.
-			mkdir -p "$(dirname "$target_dir1")"
-        		mkdir -p "$(dirname "$target_dir2")"
+			mkdir -p "$target_dir1"
+        		mkdir -p "$target_dir2"
 			log_message "SUCCESS" "${target_dir1} and ${target_dir2} are mounted."
                         echo "SUCCESS"
                         ;;
 		# if only device1 is mounted
 		"10")	
 			# create back up dorectory only for device1
-			mkdir -p "$(dirname "$target_dir1")"
+			mkdir -p "$target_dir1"
 			log_message "WARN" "only ${target_dir1} is mounted."
                         echo "WARN1"
                         ;;
 		# if only device2 is mounted
 		"01")
 			# create back up dorectory only for device2
-			mkdir -p "$(dirname "$target_dir2")"
+			mkdir -p "$target_dir2"
 			log_message "WARN" "only ${target_dir2} is mounted."
                         echo "WARN2"
                         ;;
@@ -66,8 +67,8 @@ start_backup() {
 		"SUCCESS")
 			for sub in "${OPTION_DIR[@]}" ; do
 			# delete old copied data and send only new data. 
-                        	rsync -av --delete "${src_dir}" "${target_dir1}${sub}" >> "$log_dir" 2>&1
-                        	rsync -av --delete "${src_dir}" "${target_dir2}${sub}" >> "$log_dir" 2>&1
+                        	rsync -av --delete "${src_dir}${sub}" "${target_dir1}${sub}" >> "$log_dir" 2>&1
+                        	rsync -av --delete "${src_dir}${sub}" "${target_dir2}${sub}" >> "$log_dir" 2>&1
 			done
                         log_message "SUCCESS" "backup process to both devices is successfully finished."
                         exit 0
@@ -76,7 +77,7 @@ start_backup() {
 		# start back up system to device1
 		"WARN1")
 			for sub in "${OPTION_DIR[@]}" ; do
-				rsync -av --delete "${src_dir}" "${target_dir1}${sub}" >> "$log_dir" 2>&1
+				rsync -av --delete "${src_dir}${sub}" "${target_dir1}${sub}" >> "$log_dir" 2>&1
 			done
                         log_message "SUCCESS" "backup process to ${target_dir1} is successfully finished."
                         exit 0
@@ -86,14 +87,14 @@ start_backup() {
 			mkdir -p "$target_dir2"
 
                         for sub in "${OPTION_DIR[@]}" ; do
-				rsync -av --delete "${src_dir}" "${target_dir2}${sub}" >> "$log_dir" 2>&1
+				rsync -av --delete "${src_dir}${sub}" "${target_dir2}${sub}" >> "$log_dir" 2>&1
 			done
                         log_message "SUCCESS" "backup process to ${target_dir2} is successfully finished."
                         exit 0
                         ;;
 		# no device can be sand back updata. then exit this program.
 		"FAILED")
-			exit 1i
+			exit 1
 			;;
 	esac
 }
