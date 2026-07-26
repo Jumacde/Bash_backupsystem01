@@ -5,7 +5,9 @@ ENV_FILE="$(dirname "$0")/.env"
 # check exist of the .env file.
 if [ -f "$ENV_FILE" ]; then
         export $(grep -v '^#' "$ENV_FILE" | xargs)
+	#set -a
 	#source "$ENV_FILE"
+	#set +a
 else
         echo "ERROR: .env file not found."
         exit 1 # if .env file not found end this script.
@@ -16,6 +18,7 @@ src_dir="${backup_dir}"
 # option setting of target_dir
 #OPTION_DIR="${OP_DIR[@]}"
 OPTION_DIR=(${OPTION_DIR//:/ })
+
 # directory path of back up devices
 target_dir1="${device_dir1}"
 target_dir2="${device_dir2}"
