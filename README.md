@@ -12,7 +12,7 @@ whats differents?
        backup_dir3=/home/users/C
         ==> not move forward with this idea.
           cause number of code can be too huge.
-      case2: separate the basic directory path (/home/users) and each directory include backup date(/A, /B, /C).
+      case2: separate the parent directory path (/home/users)  and each child directory include backup date(/A, /B, /C).
       - .env: set a optional_targetdir "OP_DIR"
           OP_DIR=(A B C)
       - divecie_manager.sh 
@@ -27,8 +27,9 @@ whats differents?
           OPTION_DIR=(${OPTION_DIR//:/ })
         == > success.
           
-
-
+2. add another directory path.
+      now has this back up system just one parent directory.
+       add a new back up directory whitch has another parent directory. 
 
 
 
