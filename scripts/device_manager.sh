@@ -29,6 +29,11 @@ target_dir2="${device_dir2}"
 pDir1="${create_pDir1}"
 pDir2="${create_pDir2}"
 
+# get rsync pattern values
+include_t="${include_t}"
+include_s="${include_s}"
+exclude_op="${exclude_op}"
+
 # to get the result of function
 mount_result=""
 
@@ -106,16 +111,8 @@ start_backup() {
 				copy_tree "$src_dir" "$target_dir2" "$sub"
 			done
 			#back up data form src_dir2
-			rsync -av --delete \
-				--include="*.timer"\
-				--include="*.service"\
-				--exclude="*"\
-				"${src_dir2}/" "${target_dir1}${pDir2}" >> "${log_dir}" 2>&1
-			rsync -av --delete \
-                                --include="*.timer"\
-                                --include="*.service"\
-                                --exclude="*"\
-				"${src_dir2}/" "${target_dir2}${pDir2}" >> "${log_dir}" 2>&1
+			rsync -av --delete --include="${include_t}" --include="${include_s}" --exclude="${exclude_op}" "${src_dir2}/" "${target_dir1}${pDir2}" >> "${log_dir}" 2>&1
+			rsync -av --delete --include="${include_t}" --include="${include_s}" --exclude="${exclude_op}" "${src_dir2}/" "${target_dir2}${pDir2}" >> "${log_dir}" 2>&1
 
                         log_message "FULLY SUCCESS: " "backup process to both devices is successfully finished."
                         exit 0
@@ -127,11 +124,7 @@ start_backup() {
 				copy_tree "$src_dir" "$target_dir1" "$sub"
 			done
 			#back up data form src_dir2
-			rsync -av --delete \
-				--include="*.timer"\
-                              	--include="*.service"\
-                              	--exclude="*"\
-				"${src_dir2}/" "${target_dir1}${pDir2}" >> "${log_dir}" 2>&1
+			rsync -av --delete --include="${include_t}" --include="${include_s}" --exclude="${exclude_op}" "${src_dir2}/" "${target_dir1}${pDir2}" >> "${log_dir}" 2>&1
                         log_message "SUCCESS1: " "backup process to ${target_dir1} is successfully finished."
                         exit 0
                         ;;
@@ -143,11 +136,7 @@ start_backup() {
 				copy_tree "$src_dir" "$target_dir2" "$sub"
 			done
 			# back up data from src_dir2
-			rsync -av --delete\
-                                --include="*.timer"\
-                                --include="*.service"\
-                                --exclude="*"\			
-				"${src_dir2}/" "${target_dir2}${pDir2}" >> "${log_dir}" 2>&1
+			rsync -av --delete --include="${include_t}" --include="${include_s}" --exclude="${exclude_op}" "${src_dir2}/" "${target_dir2}${pDir2}" >> "${log_dir}" 2>&1
                         log_message "SUCCESS2: " "backup process to ${target_dir2} is successfully finished."
                         exit 0
                         ;;
