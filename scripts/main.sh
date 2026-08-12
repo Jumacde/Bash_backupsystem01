@@ -1,5 +1,4 @@
 #!/bin/bash
-cd "$(dirname "$0")"
 source "$(dirname "$0")/log_manager.sh"
 source "$(dirname "$0")/device_manager.sh"
 
